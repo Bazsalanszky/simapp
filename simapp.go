@@ -84,7 +84,16 @@ type IpDomain struct {
 	PcscfPrimary string        `yaml:"pcscf-primary,omitempty" json:"pcscf-primary,omitempty"`
 	DnsSecondary string        `yaml:"dns-secondary,omitempty" json:"dns-secondary,omitempty"`
 	UePool       string        `yaml:"ue-ip-pool,omitempty" json:"ue-ip-pool,omitempty"`
-	Mtu          int           `yaml:"mtu,omitempty" json:"mtu,omitempty"`
+	// IPv6 pool in CIDR notation; each IPv6 or IPv4v6 PDU session of this DNN gets
+	// one prefix of UeIpv6PrefixLen bits out of it. An IPv6-only DNN sets this and
+	// leaves out ue-ip-pool and dns-primary.
+	UeIpv6Pool     string `yaml:"ue-ipv6-pool,omitempty" json:"ue-ipv6-pool,omitempty"`
+	DnsPrimaryV6   string `yaml:"dns-primary-v6,omitempty" json:"dns-primary-v6,omitempty"`
+	PcscfPrimaryV6 string `yaml:"pcscf-primary-v6,omitempty" json:"pcscf-primary-v6,omitempty"`
+	Mtu            int    `yaml:"mtu,omitempty" json:"mtu,omitempty"`
+	// Length of the prefix each session gets out of UeIpv6Pool. Webconsole
+	// uses 64 when it is not set.
+	UeIpv6PrefixLen int `yaml:"ue-ipv6-prefix-len,omitempty" json:"ue-ipv6-prefix-len,omitempty"`
 }
 
 type Subscriber struct {
@@ -759,6 +768,22 @@ func compareGroup(groupNew *DevGroup, groupOld *DevGroup) bool {
 			return true
 		}
 
+		if oldIpDomain.UeIpv6Pool != newIpDomain.UeIpv6Pool ||
+			oldIpDomain.UeIpv6PrefixLen != newIpDomain.UeIpv6PrefixLen {
+			logger.SimappLog.Infoln("UeIpv6Pool changed")
+			return true
+		}
+
+		if oldIpDomain.DnsPrimaryV6 != newIpDomain.DnsPrimaryV6 {
+			logger.SimappLog.Infoln("DnsPrimaryV6 changed")
+			return true
+		}
+
+		if oldIpDomain.PcscfPrimaryV6 != newIpDomain.PcscfPrimaryV6 {
+			logger.SimappLog.Infoln("PcscfPrimaryV6 changed")
+			return true
+		}
+
 		// Detect addition or removal of UeDnnQos
 		if (oldIpDomain.UeDnnQos == nil) != (newIpDomain.UeDnnQos == nil) {
 			logger.SimappLog.Infoln("UeDnnQos presence changed")
@@ -1195,6 +1220,15 @@ func dispatchGroup(configMsgChan chan configMessage, group *DevGroup, msgOp int,
 			logger.SimappLog.Infoln("  IpDomain Pcscf Primary:", ipDomain.PcscfPrimary)
 			logger.SimappLog.Infoln("  IpDomain Mtu:", ipDomain.Mtu)
 			logger.SimappLog.Infoln("  IpDomain UePool:", ipDomain.UePool)
+			if ipDomain.UeIpv6Pool != "" {
+				logger.SimappLog.Infoln("  IpDomain UeIpv6Pool:", ipDomain.UeIpv6Pool, "prefix length:", ipDomain.UeIpv6PrefixLen)
+			}
+			if ipDomain.DnsPrimaryV6 != "" {
+				logger.SimappLog.Infoln("  IpDomain Dns Primary V6:", ipDomain.DnsPrimaryV6)
+			}
+			if ipDomain.PcscfPrimaryV6 != "" {
+				logger.SimappLog.Infoln("  IpDomain Pcscf Primary V6:", ipDomain.PcscfPrimaryV6)
+			}
 
 			// Check if UeDnnQos field is populated
 			if ipDomain.UeDnnQos != nil {

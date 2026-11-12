@@ -49,6 +49,12 @@ configuration:
           dns-secondary: 8.8.4.4
           mtu: 1460
           ue-ip-pool: 10.92.0.0/16
+          # IPv6 or dual-stack DNN (optional): one /64 per session out of ue-ipv6-pool.
+          # An IPv6-only DNN sets these and leaves out ue-ip-pool and dns-primary.
+          # ue-ipv6-pool: 2001:db8:92::/48
+          # ue-ipv6-prefix-len: 64 # default 64
+          # dns-primary-v6: 2001:4860:4860::8888
+          # pcscf-primary-v6: 2001:db8::10
           ue-dnn-qos:
             dnn-mbr-downlink: 2400
             dnn-mbr-uplink: 1200
