@@ -128,6 +128,22 @@ func compareGroup(groupNew *factory.DevGroup, groupOld *factory.DevGroup) bool {
 			return true
 		}
 
+		if oldIpDomain.UeIpv6Pool != newIpDomain.UeIpv6Pool ||
+			oldIpDomain.UeIpv6PrefixLen != newIpDomain.UeIpv6PrefixLen {
+			logger.SimappLog.Infoln("UeIpv6Pool changed")
+			return true
+		}
+
+		if oldIpDomain.DnsPrimaryV6 != newIpDomain.DnsPrimaryV6 {
+			logger.SimappLog.Infoln("DnsPrimaryV6 changed")
+			return true
+		}
+
+		if oldIpDomain.PcscfPrimaryV6 != newIpDomain.PcscfPrimaryV6 {
+			logger.SimappLog.Infoln("PcscfPrimaryV6 changed")
+			return true
+		}
+
 		// Detect addition or removal of UeDnnQos
 		if (oldIpDomain.UeDnnQos == nil) != (newIpDomain.UeDnnQos == nil) {
 			logger.SimappLog.Infoln("UeDnnQos presence changed")

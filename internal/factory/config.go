@@ -54,7 +54,16 @@ type IpDomain struct {
 	PcscfPrimary string        `yaml:"pcscf-primary,omitempty" json:"pcscf-primary,omitempty"`
 	DnsSecondary string        `yaml:"dns-secondary,omitempty" json:"dns-secondary,omitempty"`
 	UePool       string        `yaml:"ue-ip-pool,omitempty" json:"ue-ip-pool,omitempty"`
-	Mtu          int           `yaml:"mtu,omitempty" json:"mtu,omitempty"`
+	// IPv6 pool in CIDR notation; each IPv6 or IPv4v6 PDU session of this DNN gets
+	// one prefix of UeIpv6PrefixLen bits out of it. An IPv6-only DNN sets this and
+	// leaves out ue-ip-pool and dns-primary.
+	UeIpv6Pool     string `yaml:"ue-ipv6-pool,omitempty" json:"ue-ipv6-pool,omitempty"`
+	DnsPrimaryV6   string `yaml:"dns-primary-v6,omitempty" json:"dns-primary-v6,omitempty"`
+	PcscfPrimaryV6 string `yaml:"pcscf-primary-v6,omitempty" json:"pcscf-primary-v6,omitempty"`
+	Mtu            int    `yaml:"mtu,omitempty" json:"mtu,omitempty"`
+	// Length of the prefix each session gets out of UeIpv6Pool. Webconsole
+	// uses 64 when it is not set.
+	UeIpv6PrefixLen int `yaml:"ue-ipv6-prefix-len,omitempty" json:"ue-ipv6-prefix-len,omitempty"`
 }
 
 type Subscriber struct {

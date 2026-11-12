@@ -149,6 +149,15 @@ func dispatchGroup(configMsgChan chan configMessage, group *factory.DevGroup, ms
 			logger.SimappLog.Infoln("  IpDomain Pcscf Primary:", ipDomain.PcscfPrimary)
 			logger.SimappLog.Infoln("  IpDomain Mtu:", ipDomain.Mtu)
 			logger.SimappLog.Infoln("  IpDomain UePool:", ipDomain.UePool)
+			if ipDomain.UeIpv6Pool != "" {
+				logger.SimappLog.Infoln("  IpDomain UeIpv6Pool:", ipDomain.UeIpv6Pool, "prefix length:", ipDomain.UeIpv6PrefixLen)
+			}
+			if ipDomain.DnsPrimaryV6 != "" {
+				logger.SimappLog.Infoln("  IpDomain Dns Primary V6:", ipDomain.DnsPrimaryV6)
+			}
+			if ipDomain.PcscfPrimaryV6 != "" {
+				logger.SimappLog.Infoln("  IpDomain Pcscf Primary V6:", ipDomain.PcscfPrimaryV6)
+			}
 
 			// Check if UeDnnQos field is populated
 			if ipDomain.UeDnnQos != nil {
